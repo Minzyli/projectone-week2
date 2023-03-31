@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A puppy who is willing to read a Shakespeare's poem for you.</title>
+
+</head>
+
+<body>
+    <button role= "button" id= "initTrigger"> You got your menu! </button>
+    <section id="puppyMessage"></section>
+    <section id="ShakespearePoem"></section>
+
+    <script>
+        const triggerButton = document.getElementById('initTrigger')
+        const puppyMessage = document.getElementById ('puppyMessage')
+        const shakespearePoem = document.getElementById ('ShakespearePoem')
+        const randomPuppyURL = "https://api.nasa.gov/planetary/earth/imagery?api_key=6FIx9mwn2zaKiQ8lTrcQA6I1BcrQTXVgqSCIaaji"
+        const randomPoemURL = "https://poetrydb.org/author,title/Shakespeare;Sonnet"
+
+        const drinkURL = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita"
+        const nasaURL = "https://api.nasa.gov/planetary/apod?api_key=93baoOsxutUEc5p0lBB5oDGtVNCA83CEihMFFhOQ"
+
+        const fetchPuppyData = () => {
+            fetch(drinkURL)
+            .then((response) =>  response.json() )
+            .then((payload) => appendDrinkData(payload))
+        }
+
+        const appendDrinkData = (data) => {
+            const allDrinks = data.drinks;
+
+            for (let i = 0; i < allDrinks.length; i++) {
+                const drink = allDrinks[i];
+                console.log(drink)
+                const nameHeader = document.createElement ('h1')
+                nameHeader.innerText = drink.strDrink
+
+                puppyMessage.appendChild(nameHeader)
+            }
+
+
+        }
+
+        const appendPuppyData = (data) => {
+            console.log (data)
+
+            const firstMessage = data.message
+            console.log(firstMessage);
+            // const messageImg = firstMessage.message
+            // console.log(messageImg)
+
+            const nameHeader = document.createElement ('h1')
+            nameHeader.innerText = "Let me read you a Shakespeare's sonnet."
+            puppyMessage.appendChild(nameHeader)
+
+            const image = document.createElement ('img')
+            image.src = firstMessage
+            puppyMessage.appendChild(image)
+
+////////////////////////////////////////////////////// add the poetry api
+            fetchShakespeareData ()
+        
+        }
+
+        const fetchShakespeareData = () => {
+            fetch(randomPoemURL)
+                .then((payload) =>  payload.json() )
+                .then((json) => appendShakespeareData((json)))
+        }
+            
+        const appendShakespeareData =(data) => {
+            const sonnet = data[0]
+            console.log(sonnet)
+////// how to name the title(prefix) for text APi?
+
+            const textTitle= sonnet.title
+
+            const textHeader = document.createElement('h3');
+            textHeader.innerText = textTitle
+            shakespearePoem.appendChild(textHeader);
+//////// and the content of the poem
+            // const innerText= document.createElement('')
+            const lines = sonnet.lines;
+            console.log(lines);
+            for(let i=0; i<lines.length; i++){
+                console.log(i)
+                const lineText = document.createElement('p');
+                lineText.innerText = lines[i]
+                shakespearePoem.appendChild(lineText);
+            }
+
+        }
+
+        triggerButton.addEventListener("click", fetchPuppyData)
+
+    </script>
+
+</body>
+
+</html>
